@@ -2,7 +2,6 @@
 
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-import Header from '@/components/Header';
 import './globals.css';
 import { useState, ReactElement } from 'react';
 import React from 'react';
@@ -27,7 +26,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
       <head><title>StepHub</title></head>
       <body>
         <CartProvider>
-          <Header />
           <ToastContainer />
           <main>
             {React.cloneElement(children, { setUser, user })} {/* Pass both setUser and user */}

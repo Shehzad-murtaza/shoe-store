@@ -8,6 +8,7 @@ import React, { useState, useEffect } from 'react';
 import { useCart } from "@/app/context/cartContext";  // Make sure the import is correct
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Header from '@/components/Header';
 
 config.autoAddCss = false;
 library.add(faTrashAlt);
@@ -56,6 +57,8 @@ const Cart: React.FC = () => {
     if (!isClient) return null;  // Ensure the component is rendered only on the client
 
     return (
+        <>
+        <Header/>
         <div className="absolute inset-0 bg-gray-900 flex justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
             <ToastContainer />
             <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-3xl">
@@ -111,6 +114,7 @@ const Cart: React.FC = () => {
                 )}
             </div>
         </div>
+        </>
     );
 };
 

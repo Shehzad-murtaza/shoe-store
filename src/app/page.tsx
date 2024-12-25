@@ -3,9 +3,11 @@ import ProductList from './products/page';
 import './globals.css';
 import Link from 'next/link';
 import Footer from '@/components/Footer';
+import Header from '@/components/Header';
 
 export default function Home() {
-    return (
+    return (<>
+        <Header/>
         <div className="min-h-screen bg-darkblue flex flex-col items-center justify-start py-12 px-6 space-y-12">
             {/* Hero Section */}
             <section className="w-full min-h-screen bg-gradient-to-r from-purple-700 to-purple-600 flex items-center justify-center text-center py-24 px-4 relative">
@@ -37,6 +39,6 @@ export default function Home() {
                 <ProductList />
             </section>
              <Footer/>
-        </div>
+        </div></>
     );
 }

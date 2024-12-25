@@ -8,42 +8,41 @@ export async function POST(request: Request) {
   try {
     await connectDB();
 
-    const { action, email, fullName, password } = await request.json();
+    const { action, email, fullName, password, userId } = await request.json();
 
     if (action === 'signup') {
-      const existingUser  = await User.findOne({ email });
-      if (existingUser ) {
+      const existingUser = await User.findOne({ email });
+      if (existingUser) {
         return NextResponse.json(
-          { message: 'User  already exists' },
+          { message: 'User already exists' },
           { status: 400 }
         );
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-
-      const newUser  = new User({
+      const newUser = new User({
         email,
         fullName,
         password: hashedPassword,
       });
 
       try {
-        await newUser .save();
+        await newUser.save();
         return NextResponse.json(
-          { message: 'User  created successfully' },
+          { message: 'User created successfully' },
           { status: 201 }
         );
       } catch (error: unknown) {
         return NextResponse.json(
           { message: 'Error creating user', error: (error as Error).message },
           { status: 500 }
- );
+        );
       }
     } else if (action === 'login') {
       const user = await User.findOne({ email });
       if (!user) {
         return NextResponse.json(
-          { message: 'User  not found' },
+          { message: 'User not found' },
           { status: 404 }
         );
       }
@@ -70,6 +69,33 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { message: 'Login successful', token, user }, // Send user data along with token
         { status: 200 }
+      );
+    } else if (action === 'delete') {
+      if (!userId) {
+        return NextResponse.json(
+          { message: 'User ID is required for deletion' },
+          { status: 400 }
+        );
+      }
+
+      const user = await User.findById(userId);
+      if (!user) {
+        return NextResponse.json(
+          { message: 'User not found' },
+          { status: 404 }
+        );
+      }
+
+      await User.findByIdAndDelete(userId);
+
+      return NextResponse.json(
+        { message: 'User deleted successfully' },
+        { status: 200 }
+      );
+    } else {
+      return NextResponse.json(
+        { message: 'Invalid action' },
+        { status: 400 }
       );
     }
   } catch (error: unknown) {

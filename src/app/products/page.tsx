@@ -5,6 +5,7 @@ import Image from "next/image";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-cards";
 import { useCart } from '@/app/context/cartContext';
 import Link from 'next/link';
+import Header from '@/components/Header';
 
 // Define product type
 interface Product {
@@ -35,6 +36,8 @@ const ProductList: React.FC = () => {
     };
 
     return (
+        <>
+        <Header/>
         <div className="bg-darkblue h-auto px-4 py-6 sm:px-8 lg:px-16">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-8">
                 {products.map((product: Product) => (
@@ -78,6 +81,7 @@ const ProductList: React.FC = () => {
                 ))}
             </div>
         </div>
+        </>
     );
 };
 

@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation'; // Correct import
 import { toast } from 'react-toastify'; // No need to import ToastContainer here
 import 'react-toastify/dist/ReactToastify.css';
+import Header from '@/components/Header';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
@@ -48,6 +49,8 @@ const Signup = () => {
   };
 
   return (
+    <>
+    <Header/>
     <div className="flex items-center justify-center min-h-screen bg-gray-900">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-xl">
         <h1 className="text-3xl font-semibold text-center text-gray-800">Create an Account</h1>
@@ -96,6 +99,7 @@ const Signup = () => {
         </p>
       </div>
     </div>
+    </>
   );
 };
 

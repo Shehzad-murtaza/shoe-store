@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
+import Header from '@/components/Header';
 
 // Define the product structure
 interface Product {
@@ -54,6 +55,8 @@ const ProductDetails: React.FC = () => {
 
   // Display product details
   return (
+    <>
+    <Header/>
     <div className="min-h-screen bg-gray-900 py-12 px-6">
       <div className="max-w-6xl mx-auto text-center text-white space-y-10">
         <h1 className="text-4xl md:text-5xl font-extrabold mb-6">{product.name}</h1>
@@ -83,6 +86,7 @@ const ProductDetails: React.FC = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
