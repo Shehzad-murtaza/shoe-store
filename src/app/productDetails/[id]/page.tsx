@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Header from '@/components/Header';
+import {Background} from '@/components/background';
 
 // Define the product structure
 interface Product {
@@ -66,10 +67,13 @@ const ProductDetails: React.FC = () => {
   // Display product details
   return (
     <>
+    <div className="fixed inset-0 h-full w-full">
+            <Background />
+          </div>
     <Header/>
-    <div className="min-h-screen bg-darkblue mt-32 py-12 px-6">
-      <div className="max-w-6xl mx-auto text-center text-white space-y-10">
-        <h1 className="text-4xl md:text-5xl font-extrabold mb-6">{product.name}</h1>
+    <div className="min-h-screen bg-darkblue py-12 px-6">
+      <div className="max-w-6xl mx-auto text-center mt-24 text-white space-y-10">
+        <h1 className="text-4xl md:text-5xl font-extrabold z-10 mb-6">{product.name}</h1>
         <div className="flex flex-col md:flex-row justify-between items-center gap-12">
           <div className="w-full md:w-1/2 max-w-[450px]">
             <div className="w-full h-[400px] overflow-hidden rounded-lg relative">
@@ -83,12 +87,12 @@ const ProductDetails: React.FC = () => {
             </div>
           </div>
           <div className="w-full md:w-1/2 text-left space-y-6">
-            <p className="text-lg md:text-xl text-neutral-300">{product.description}</p>
+            <p className="text-lg md:text-xl z-10 text-neutral-300">{product.description}</p>
             <p className="text-2xl text-neutral-100 font-semibold">
               Price: <span className="text-purple-500">${product.price.toFixed(2)}</span>
             </p>
             <div className="flex justify-center md:justify-start">
-              <button className="mt-6 py-3 px-6 bg-purple-600 text-white font-semibold rounded-lg shadow-md hover:bg-purple-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500">
+              <button className="mt-6 py-3 px-6 bg-purple-600 text-white z-10 font-semibold rounded-lg shadow-md hover:bg-purple-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500">
                 Buy Now
               </button>
             </div>

@@ -1,39 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body {
-  background-color: #000000; /* Dark blue background for the page */
-  color: white; /* Light text color for the whole page */
-  font-family: 'Arial', sans-serif;
-}
-
-a {
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-/* Prevent autofill background color change */
-input:-webkit-autofill {
-  background-color: #000000 !important; /* Set your desired background color */
-  color: #9b4dca !important; /* Set your desired text color */
-}
-
-/* Maintain the background color when focused */
-input:-webkit-autofill:focus {
-  background-color: #000000 !important; /* Set your desired background color */
-  color: #9b4dca !important; /* Set your desired text color */
-}
-
-/* Additional styles to ensure consistency */
-input {
-  background-color: #000000; /* Default background color */
-  color: #9b4dca; /* Default text color */
+body{
+  background-color: black;
 }

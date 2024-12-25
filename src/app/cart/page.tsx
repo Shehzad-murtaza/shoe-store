@@ -9,6 +9,7 @@ import { useCart } from "@/app/context/cartContext";  // Make sure the import is
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from '@/components/Header';
+import { Background } from '@/components/background';
 
 config.autoAddCss = false;
 library.add(faTrashAlt);
@@ -58,10 +59,13 @@ const Cart: React.FC = () => {
 
     return (
         <>
+        <div className="fixed inset-0 h-full w-full">
+                <Background />
+              </div>
         <Header/>
-        <div className="absolute inset-0 bg-darkblue flex justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="h-screen w-full bg-darkblue flex justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
             <ToastContainer />
-            <div className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-2xl w-full max-w-3xl">
+            <div className="bg-white z-10 dark:bg-gray-900 p-8 rounded-lg shadow-2xl w-full max-w-3xl">
                 <h1 className="text-3xl text-center font-bold text-purple-500 dark:text-purple-500 mb-6">Your Cart</h1>
                 {cart.length === 0 ? (
                     <p className="text-center text-gray-500 dark:text-gray-300">Your cart is empty.</p>

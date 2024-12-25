@@ -7,7 +7,6 @@ import { useState, ReactElement } from 'react';
 import React from 'react';
 import { CartProvider } from './context/cartContext';
 
-// Define a user interface if possible
 interface User {
   id: string;
   name: string;
@@ -15,7 +14,10 @@ interface User {
 }
 
 interface RootLayoutProps {
-  children: ReactElement<{ setUser: React.Dispatch<React.SetStateAction<User | null>>, user: User | null }>;
+  children: ReactElement<{
+    setUser: React.Dispatch<React.SetStateAction<User | null>>;
+    user: User | null;
+  }>;
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
@@ -23,8 +25,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
   return (
     <html lang="en">
-      <head><title>StepHub</title></head>
+      <head>
+        <title>StepHub</title>
+      </head>
       <body>
+
+        {/* Main Content */}
         <CartProvider>
           <ToastContainer />
           <main>

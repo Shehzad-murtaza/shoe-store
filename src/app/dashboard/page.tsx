@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import Header from '@/components/Header';
+import { Background } from '@/components/background';
 
 interface User {
   _id: string;
@@ -84,6 +85,9 @@ const Dashboard = () => {
 
   return (
     <>
+    <div className="fixed -z-10 inset-0 h-full w-full">
+            <Background />
+          </div>
       <Header />
       <div className="container mx-auto p-6 bg-darkblue mt-40 min-h-screen">
         <h1 className="text-3xl font-semibold text-center text-white mb-6">
@@ -92,7 +96,7 @@ const Dashboard = () => {
         <div className="text-center mb-6">
           <button
             onClick={handleLogout}
-            className="p-2 text-white bg-purple-800 rounded-md hover:bg-purple-900 transition duration-200"
+            className="p-2 z-50 text-white bg-purple-800 rounded-md hover:bg-purple-900 transition duration-200"
           >
             Logout
           </button>

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from '@/components/Header';
-import "./login.css";
+import { Background } from '@/components/background';
 
 
 const Login = () => {
@@ -50,9 +50,12 @@ const Login = () => {
 
   return (
     <>
+      <div className="fixed top-0 inset-0 h-full w-full">
+            <Background />
+          </div>
     <Header />
     <div className="flex items-center justify-center min-h-screen bg-darkblue">
-      <div className="w-full max-w-md p-8 space-y-6 bg-gray-900 rounded-xl shadow-xl">
+      <div className="w-full max-w-md p-8 space-y-6 z-10 mt-24 bg-gray-900 rounded-xl shadow-xl">
         <h1 className="text-3xl font-semibold text-center text-purple-600">Welcome Back</h1>
         <form onSubmit={handleLogin} className="space-y-6">
           <div>

@@ -1,9 +1,0 @@
-.custom-input:-webkit-autofill {
-    background-color: #000000 !important; /* Set your desired background color */
-    color: #9b4dca !important; /* Set your desired text color */
-  }
-  
-  .custom-input:-webkit-autofill:focus {
-    background-color: #000000 !important; /* Set your desired background color */
-    color: #9b4dca !important; /* Set your desired text color */
-  }

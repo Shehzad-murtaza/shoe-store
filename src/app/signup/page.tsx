@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'; // Correct import
 import { toast } from 'react-toastify'; // No need to import ToastContainer here
 import 'react-toastify/dist/ReactToastify.css';
 import Header from '@/components/Header';
-import "./signup.css"; // Import the CSS file
+import { Background } from '@/components/background';
 
 const Signup = () => {
   const [email, setEmail] = useState('');
@@ -31,7 +31,7 @@ const Signup = () => {
         fullName,
         password,
       });
-      
+
       toast.success(response.data.message); // Show success toast
       router.push('/login'); // Redirect to login page after signup
     } catch (error: unknown) {
@@ -41,65 +41,74 @@ const Signup = () => {
         if (message === 'User already exists') {
           toast.error('This email is already taken.'); // Handle existing user error
         } else {
-          toast.error(message || "An error occurred"); // Show other errors
+          toast.error(message || 'An error occurred'); // Show other errors
         }
       } else {
-        toast.error("An unknown error occurred"); // Fallback for other types of errors
+        toast.error('An unknown error occurred'); // Fallback for other types of errors
       }
     }
   };
 
   return (
     <>
-    <Header/>
-    <div className="flex items-center justify-center min-h-screen bg-darkblue">
-      <div className="w-full max-w-md p-8 space-y-6 bg-gray-900 rounded-lg shadow-xl">
-        <h1 className="text-3xl font-semibold text-center text-purple-600">Create an Account</h1>
-        <form onSubmit={handleSignup} className="space-y-6">
-          <div>
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className=" custom-input w-full p-4 text-purple-400 bg-darkblue border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-opacity-50"
-            />
-          </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Username"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              required
-              className=" custom-input w-full p-4 text-purple-400 bg-darkblue border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-opacity-50"
-            />
-          </div>
-          <div>
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className=" custom-input w-full p-4 text-purple-400 bg-darkblue border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
-            />
-            {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
-          </div>
-          <button
-            type="submit"
-            className="w-full p-4 text-white bg-purple-600 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-200"
-          >
-            Signup
-          </button>
-        </form>
-        <p className="text-center text-gray-600">
-          Already have an account?{' '}
-          <a href="/login" className="text-purple-600 hover:underline">Login</a>
-        </p>
+      {/* Background spans the full page */}
+      <div className="fixed inset-0 h-full w-full">
+        <Background />
       </div>
-    </div>
+
+      <Header />
+
+      {/* Signup form */}
+      <div className="flex items-center justify-center min-h-screen bg-darkblue">
+        <div className="w-full max-w-md p-8 space-y-6 bg-gray-900 rounded-lg z-10 mt-20 shadow-xl">
+          <h1 className="text-3xl font-semibold text-center text-purple-600">Create an Account</h1>
+          <form onSubmit={handleSignup} className="space-y-6">
+            <div>
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="custom-input w-full p-4 text-purple-400 bg-darkblue border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-opacity-50"
+              />
+            </div>
+            <div>
+              <input
+                type="text"
+                placeholder="Username"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+                className="custom-input w-full p-4 text-purple-400 bg-darkblue border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-opacity-50"
+              />
+            </div>
+            <div>
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="custom-input w-full p-4 text-purple-400 bg-darkblue border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+              />
+              {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
+            </div>
+            <button
+              type="submit"
+              className="w-full p-4 text-white bg-purple-600 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-200"
+            >
+              Signup
+            </button>
+          </form>
+          <p className="text-center text-gray-600">
+            Already have an account?{' '}
+            <a href="/login" className="text-purple-600 hover:underline">
+              Login
+            </a>
+          </p>
+        </div>
+      </div>
     </>
   );
 };
