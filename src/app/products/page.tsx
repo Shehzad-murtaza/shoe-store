@@ -58,7 +58,7 @@ const ProductList: React.FC = () => {
                                 <p className="text-neutral-400 text-sm">{product.description}</p>
                             </div>
                             <div className="flex justify-between items-center mt-4">
-                                <Link href={`/productdetails/${product.id}`}>
+                                <Link href={`/productDetails/${product.id}`}>
                                     <CardItem
                                         translateZ={20}
                                         as="button"

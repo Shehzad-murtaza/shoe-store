@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'; // Correct import
 import { toast } from 'react-toastify'; // No need to import ToastContainer here
 import 'react-toastify/dist/ReactToastify.css';
 import Header from '@/components/Header';
+import "./signup.css"; // Import the CSS file
 
 const Signup = () => {
   const [email, setEmail] = useState('');
@@ -51,9 +52,9 @@ const Signup = () => {
   return (
     <>
     <Header/>
-    <div className="flex items-center justify-center min-h-screen bg-gray-900">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-xl">
-        <h1 className="text-3xl font-semibold text-center text-gray-800">Create an Account</h1>
+    <div className="flex items-center justify-center min-h-screen bg-darkblue">
+      <div className="w-full max-w-md p-8 space-y-6 bg-gray-900 rounded-lg shadow-xl">
+        <h1 className="text-3xl font-semibold text-center text-purple-600">Create an Account</h1>
         <form onSubmit={handleSignup} className="space-y-6">
           <div>
             <input
@@ -62,7 +63,7 @@ const Signup = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full p-4 text-gray-700 bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50"
+              className=" custom-input w-full p-4 text-purple-400 bg-darkblue border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-opacity-50"
             />
           </div>
           <div>
@@ -72,7 +73,7 @@ const Signup = () => {
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               required
-              className="w-full p-4 text-gray-700 bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50"
+              className=" custom-input w-full p-4 text-purple-400 bg-darkblue border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-opacity-50"
             />
           </div>
           <div>
@@ -82,20 +83,20 @@ const Signup = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full p-4 text-gray-700 bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50"
+              className=" custom-input w-full p-4 text-purple-400 bg-darkblue border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
             />
             {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
           </div>
           <button
             type="submit"
-            className="w-full p-4 text-white bg-teal-600 rounded-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
+            className="w-full p-4 text-white bg-purple-600 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-200"
           >
             Signup
           </button>
         </form>
         <p className="text-center text-gray-600">
           Already have an account?{' '}
-          <a href="/login" className="text-teal-600 hover:underline">Login</a>
+          <a href="/login" className="text-purple-600 hover:underline">Login</a>
         </p>
       </div>
     </div>

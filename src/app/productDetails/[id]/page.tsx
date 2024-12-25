@@ -46,7 +46,17 @@ const ProductDetails: React.FC = () => {
 
   // Loading or error handling
   if (loading) {
-    return <p className="text-white text-center mt-12">Loading...</p>;
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-darkblue">
+        <div className="relative w-full max-w-md px-4">
+          {/* Loading bar */}
+          <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+            <div className="bg-purple-600 h-2.5 rounded-full animate-pulse"></div>
+          </div>
+          <div className="text-white font-medium text-lg text-center">Loading...</div>
+        </div>
+      </div>
+    );
   }
 
   if (!product) {
@@ -57,7 +67,7 @@ const ProductDetails: React.FC = () => {
   return (
     <>
     <Header/>
-    <div className="min-h-screen bg-gray-900 py-12 px-6">
+    <div className="min-h-screen bg-darkblue mt-32 py-12 px-6">
       <div className="max-w-6xl mx-auto text-center text-white space-y-10">
         <h1 className="text-4xl md:text-5xl font-extrabold mb-6">{product.name}</h1>
         <div className="flex flex-col md:flex-row justify-between items-center gap-12">

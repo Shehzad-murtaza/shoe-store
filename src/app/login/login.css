@@ -1,0 +1,17 @@
+/* Prevent autofill background color change */
+input:-webkit-autofill {
+    background-color: #000000 !important; /* Set your desired background color */
+    color: #9b4dca !important; /* Set your desired text color */
+  }
+  
+  /* Maintain the background color when focused */
+  input:-webkit-autofill:focus {
+    background-color: #000000 !important; /* Set your desired background color */
+    color: #9b4dca !important; /* Set your desired text color */
+  }
+  
+  /* Additional styles to ensure consistency */
+  input {
+    background-color: #000000; /* Default background color */
+    color: #9b4dca; /* Default text color */
+  }

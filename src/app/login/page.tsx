@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from '@/components/Header';
+import "./login.css";
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -49,9 +51,9 @@ const Login = () => {
   return (
     <>
     <Header />
-    <div className="flex items-center justify-center min-h-screen bg-gray-900">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-xl">
-        <h1 className="text-3xl font-semibold text-center text-gray-800">Welcome Back</h1>
+    <div className="flex items-center justify-center min-h-screen bg-darkblue">
+      <div className="w-full max-w-md p-8 space-y-6 bg-gray-900 rounded-xl shadow-xl">
+        <h1 className="text-3xl font-semibold text-center text-purple-600">Welcome Back</h1>
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
             <input
@@ -60,7 +62,7 @@ const Login = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full p-4 text-gray-700 bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50"
+              className="w-full p-4 text-purple-400 bg-darkblue border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-opacity-50"
             />
           </div>
           <div>
@@ -70,20 +72,20 @@ const Login = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full p-4 text-gray-700 bg-gray-100 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50"
+              className="w-full p-4 text-purple-400 bg-darkblue border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="w-full p-4 text-white bg-teal-600 rounded-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
+            className="w-full p-4 text-white bg-purple-600 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-200"
           >
             {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
         <p className="text-center text-gray-600">
           Don&apos;t have an account?{' '}
-          <a href="/signup" className="text-teal-600 hover:underline">Signup</a>
+          <a href="/signup" className="text-purple-600 hover:underline">Signup</a>
         </p>
       </div>
 

@@ -70,8 +70,14 @@ const Dashboard = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-black to-gray-800">
-        <div className="text-white font-medium text-lg">Loading...</div>
+      <div className="flex justify-center items-center min-h-screen bg-darkblue">
+        <div className="relative w-full max-w-md px-4">
+          {/* Loading bar */}
+          <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+            <div className="bg-purple-600 h-2.5 rounded-full animate-pulse"></div>
+          </div>
+          <div className="text-white font-medium text-lg text-center">Loading...</div>
+        </div>
       </div>
     );
   }
@@ -79,14 +85,14 @@ const Dashboard = () => {
   return (
     <>
       <Header />
-      <div className="container mx-auto p-6 bg-gradient-to-r from-black to-gray-800 mt-40 min-h-screen">
+      <div className="container mx-auto p-6 bg-darkblue mt-40 min-h-screen">
         <h1 className="text-3xl font-semibold text-center text-white mb-6">
           Welcome, {user?.fullName}
         </h1>
         <div className="text-center mb-6">
           <button
             onClick={handleLogout}
-            className="p-2 text-white bg-teal-600 rounded-md hover:bg-teal-700 transition duration-200"
+            className="p-2 text-white bg-purple-800 rounded-md hover:bg-purple-900 transition duration-200"
           >
             Logout
           </button>
@@ -96,13 +102,13 @@ const Dashboard = () => {
             users.map((user) => (
               <div
                 key={user._id}
-                className="bg-gray-900 rounded-lg shadow-md p-4 hover:bg-gray-800 transition duration-300"
+                className="bg- rounded-lg shadow-md p-4 hover:bg-gray-800 transition duration-300"
               >
-                <h2 className="text-xl font-semibold text-teal-400">{user.fullName}</h2>
+                <h2 className="text-xl font-semibold text-purple-600">{user.fullName}</h2>
                 <p className="text-gray-300">{user.email}</p>
                 <button
                   onClick={() => handleDeleteUser(user._id)}
-                  className="mt-2 p-2 text-white bg-red-600 rounded-md hover:bg-red-700 transition duration-200"
+                  className="mt-2 p-2 text-white bg-darkblue hover:bg-purple-900 rounded-md"
                 >
                   Delete User
                 </button>

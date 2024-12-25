@@ -59,10 +59,10 @@ const Cart: React.FC = () => {
     return (
         <>
         <Header/>
-        <div className="absolute inset-0 bg-gray-900 flex justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 bg-darkblue flex justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
             <ToastContainer />
-            <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-3xl">
-                <h1 className="text-3xl text-center font-bold text-gray-800 dark:text-white mb-6">Your Cart</h1>
+            <div className="bg-white dark:bg-gray-900 p-8 rounded-lg shadow-2xl w-full max-w-3xl">
+                <h1 className="text-3xl text-center font-bold text-purple-500 dark:text-purple-500 mb-6">Your Cart</h1>
                 {cart.length === 0 ? (
                     <p className="text-center text-gray-500 dark:text-gray-300">Your cart is empty.</p>
                 ) : (
@@ -71,7 +71,7 @@ const Cart: React.FC = () => {
                             {cart.map((item: CartItem) => (
                                 <li
                                     key={item.id}
-                                    className="flex items-center justify-between p-4 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md"
+                                    className="flex items-center justify-between p-4 bg-gray-500 dark:bg-gray-800 rounded-lg shadow-md"
                                 >
                                     <div className="flex items-center">
                                         <input
@@ -81,7 +81,7 @@ const Cart: React.FC = () => {
                                             onChange={() => handleSelectItem(item.id)}
                                         />
                                         <div>
-                                            <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
+                                            <h3 className="text-lg font-semibold text-purple-500 dark:text-purple">
                                                 {item.name}
                                             </h3>
                                             <span className="text-sm text-gray-500 dark:text-gray-400">
@@ -101,7 +101,7 @@ const Cart: React.FC = () => {
                         <div className="border-t border-gray-200 dark:border-gray-600 pt-4">
                             <div className="flex justify-between text-lg font-medium text-gray-800 dark:text-white">
                                 <span>Total:</span>
-                                <span className="text-purple-600">${calculateTotal()}</span>
+                                <span className="text-green-400">${calculateTotal()}</span>
                             </div>
                             <button
                                 className="mt-4 w-full py-3 px-6 bg-purple-600 text-white font-semibold rounded-lg shadow-lg hover:bg-purple-700 transition-all duration-300"
