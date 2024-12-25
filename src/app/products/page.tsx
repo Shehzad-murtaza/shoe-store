@@ -38,7 +38,7 @@ const ProductList: React.FC = () => {
     return (
         <>
         <Header/>
-        <div className="bg-darkblue h-auto px-4 py-6 sm:px-8 lg:px-16">
+        <div className="bg-darkblue h-auto px-4 py-6 sm:px-8 mt-36 lg:px-16">
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-8">
                 {products.map((product: Product) => (
                     <CardContainer key={product.id} className="inter-var">
