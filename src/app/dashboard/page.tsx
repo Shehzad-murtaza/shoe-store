@@ -11,25 +11,30 @@ interface User {
   _id: string;
   email: string;
   fullName: string;
+  role: string; // Add role property
 }
 
 const Dashboard = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const [user, setUser ] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
-    const storedUser  = localStorage.getItem('user');
+    const storedUser = localStorage.getItem('user');
 
-    if (!storedToken || !storedUser ) {
+    if (!storedToken || !storedUser) {
       router.push('/login'); // Redirect to login if no token or user data found
     } else {
-      const parsedUser  = JSON.parse(storedUser );
-      if (parsedUser ) {
-        setUser (parsedUser );
-        fetchUsers(); // Fetch users only if authenticated
+      const parsedUser = JSON.parse(storedUser);
+      if (parsedUser) {
+        setUser(parsedUser);
+        if (parsedUser.role === 'admin') {
+          fetchUsers(); // Fetch users only if authenticated and admin
+        } else {
+          router.push('/profile'); // Redirect to profile if not admin
+        }
       } else {
         router.push('/login'); // Redirect if user data is invalid
       }
@@ -54,7 +59,7 @@ const Dashboard = () => {
     router.push('/login'); // Redirect to login after logout
   };
 
-  const handleDeleteUser  = async (userId: string) => {
+  const handleDeleteUser = async (userId: string) => {
     try {
       const response = await axios.post('/api/auth', {
         action: 'delete',
@@ -62,7 +67,7 @@ const Dashboard = () => {
       });
 
       if (response.status === 200) {
-        toast.success('User  deleted successfully');
+        toast.success('User deleted successfully');
         // Refetch users after deletion
         fetchUsers();
       } else {
@@ -90,7 +95,7 @@ const Dashboard = () => {
 
   // Ensure user is not null before rendering
   if (!user) {
-    return <p className="text-white text-center mt-12">User  not found. Please check the URL.</p>;
+    return <p className="text-white text-center mt-12">User not found. Please check the URL.</p>;
   }
 
   return (
@@ -121,9 +126,8 @@ const Dashboard = () => {
                 <h2 className="text-xl font-semibold text-purple-600">{user.fullName}</h2>
                 <p className="text-gray-300">{user.email}</p>
                 <button
-                  onClick={() => handleDeleteUser (user._id)}
-                  className="mt-2 p-2 text-white bg ```typescript
-                  bg-red-600 rounded-md hover:bg-red-700 transition duration-200"
+                  onClick={() => handleDeleteUser(user._id)}
+                  className="mt-2 p-2 text-white bg-red-600 rounded-md hover:bg-red-700 transition duration-200"
                 >
                   Delete User
                 </button>

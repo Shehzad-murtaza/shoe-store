@@ -13,6 +13,7 @@ const Signup = () => {
   const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [showPassword, setShowPassword] = useState(false); // Password visibility toggle
   const router = useRouter(); // Use useRouter from next/navigation
 
   const handleSignup = async (e: React.FormEvent) => {
@@ -83,15 +84,22 @@ const Signup = () => {
                 className="custom-input w-full p-4 text-purple-400 bg-darkblue border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-700 focus:ring-opacity-50"
               />
             </div>
-            <div>
+            <div className="relative">
               <input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 className="custom-input w-full p-4 text-purple-400 bg-darkblue border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-4 text-purple-400 focus:outline-none"
+              >
+                {showPassword ? '🙈' : '👁️'}
+              </button>
               {passwordError && <p className="text-red-500 text-sm">{passwordError}</p>}
             </div>
             <button

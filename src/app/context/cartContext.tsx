@@ -1,17 +1,23 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { toast } from 'react-toastify';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 // Type definitions
 interface Product {
     id: number;
     name: string;
-    price: number; // Add price if needed
+    description: string;
+    price: number;
+    imageUrl: string;
+    quantity: number;
 }
 
 interface CartContextType {
     cart: Product[];
     addToCart: (product: Product) => void;
     removeFromCart: (productId: number) => void;
+    clearCart: () => void;
     cartNotify: number;
 }
 
@@ -23,61 +29,98 @@ interface CartProviderProps {
 }
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
-    // Initial cart setup, getting cart data from sessionStorage
-    const [cart, setCart] = useState<Product[]>(() => {
-        if (typeof window !== "undefined") {
-            const storedCart = sessionStorage.getItem('cart');
-            return storedCart ? JSON.parse(storedCart) : [];
-        }
-        return [];
-    });
+    const [cart, setCart] = useState<Product[]>([]);
+    const [cartNotify, setCartNotify] = useState<number>(0);
+    const router = useRouter();
 
-    const [cartNotify, setCartNotify] = useState<number>(cart.length);
-
-    // Update cartNotify and sessionStorage whenever cart changes
     useEffect(() => {
-        if (typeof window !== "undefined") {
-            sessionStorage.setItem('cart', JSON.stringify(cart)); // Save cart to sessionStorage
-            setCartNotify(cart.length); // Update notification based on cart length
-        }
+        const fetchCart = async () => {
+            const storedUser = localStorage.getItem('user');
+            if (storedUser) {
+                const parsedUser = JSON.parse(storedUser);
+                try {
+                    const response = await axios.get(`/api/cart?userId=${parsedUser._id}`);
+                    setCart(response.data.cart || []); // Ensure cart is always an array
+                } catch (error) {
+                    console.error('Error fetching cart:', error);
+                }
+            }
+        };
+        fetchCart();
+    }, []);
+
+    useEffect(() => {
+        sessionStorage.setItem('cart', JSON.stringify(cart));
+        setCartNotify(cart.reduce((acc, product) => acc + product.quantity, 0));
     }, [cart]);
 
-    // Add item to cart
+    const saveCartToUser = async (updatedCart: Product[]) => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            const parsedUser = JSON.parse(storedUser);
+            try {
+                await axios.post('/api/cart', { userId: parsedUser._id, cart: updatedCart });
+                parsedUser.cart = updatedCart;
+                localStorage.setItem('user', JSON.stringify(parsedUser));
+            } catch (error) {
+                console.error('Error saving cart:', error);
+            }
+        }
+    };
+
     const addToCart = (product: Product) => {
-        const exists = cart.find((item) => item.id === product.id);
-        if (exists) {
-            toast.error(`${product.name} is already in your cart!`, {
-                toastId: `duplicate-${product.id}`, // Unique toast id for each product
-            });
+        const storedUser = localStorage.getItem('user');
+        if (!storedUser) {
+            toast.error('Please login or signup to add items to the cart');
+            router.push('/signup');
             return;
         }
 
         setCart((prevCart) => {
-            toast.success(`${product.name} has been added to your cart!`, {
-                toastId: `add-${product.id}`, // Unique toast id for each add action
-            });
-            return [...prevCart, product];
-        });
-    };
-
-    // Remove item from cart
-    const removeFromCart = (productId: number) => {
-        setCart((prevCart) => {
-            const product = prevCart.find((item) => item.id === productId);
-            const updatedCart = prevCart.filter((item) => item.id !== productId);
-
-            if (product) {
-                toast.success(`${product.name} has been removed from your cart!`, {
-                    toastId: `remove-${productId}`, // Unique toast id for each remove action
-                });
-            }
-
+            const existingProduct = prevCart.find((item) => item.id === product.id);
+            const updatedCart = existingProduct
+                ? prevCart.map((item) =>
+                    item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+                )
+                : [...prevCart, { ...product, quantity: 1 }];
+            saveCartToUser(updatedCart);
             return updatedCart;
         });
+        toast.success(`${product.name} added to cart`);
+    };
+
+    const removeFromCart = (productId: number) => {
+        setCart((prevCart) => {
+            const existingProduct = prevCart.find((item) => item.id === productId);
+            const updatedCart = existingProduct && existingProduct.quantity > 1
+                ? prevCart.map((item) =>
+                    item.id === productId ? { ...item, quantity: item.quantity - 1 } : item
+                )
+                : prevCart.filter((item) => item.id !== productId);
+            saveCartToUser(updatedCart);
+            return updatedCart;
+        });
+        toast.info(`Product removed from cart`);
+    };
+
+    const clearCart = async () => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            const parsedUser = JSON.parse(storedUser);
+            try {
+                await axios.post('/api/cart', { userId: parsedUser._id, cart: [] });
+                parsedUser.cart = [];
+                localStorage.setItem('user', JSON.stringify(parsedUser));
+            } catch (error) {
+                console.error('Error clearing cart:', error);
+            }
+        }
+        setCart([]);
+        sessionStorage.removeItem('cart');
     };
 
     return (
-        <CartContext.Provider value={{ cart, addToCart, removeFromCart, cartNotify }}>
+        <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, cartNotify }}>
             {children}
         </CartContext.Provider>
     );
@@ -85,8 +128,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
 export const useCart = (): CartContextType => {
     const context = useContext(CartContext);
-    if (!context) {
-        throw new Error("useCart must be used within a CartProvider");
+    if (context === undefined) {
+        throw new Error('useCart must be used within a CartProvider');
     }
     return context;
 };

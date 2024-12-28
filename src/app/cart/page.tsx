@@ -1,34 +1,31 @@
 'use client';
 
-import '@fortawesome/fontawesome-svg-core/styles.css';
-import { config, library } from '@fortawesome/fontawesome-svg-core';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState, useEffect } from 'react';
-import { useCart } from "@/app/context/cartContext";  // Make sure the import is correct
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Header from '@/components/Header';
+import { useRouter } from 'next/navigation';
+import { useCart } from '@/app/context/cartContext';
 import { Background } from '@/components/background';
-
-config.autoAddCss = false;
-library.add(faTrashAlt);
-
-// Define the structure of cart items (CartItem)
-interface CartItem {
-    id: number;
-    name: string;
-    price: number;
-}
+import Header from '@/components/Header';
 
 const Cart: React.FC = () => {
-    const { cart, removeFromCart } = useCart();
+    const { cart, addToCart, removeFromCart, clearCart } = useCart();
     const [selectedItems, setSelectedItems] = useState<number[]>([]);  // Track selected items
     const [isClient, setIsClient] = useState(false);  // Ensure this is client-side
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+    const router = useRouter();
 
     useEffect(() => {
         setIsClient(true);  // Update after the component mounts
-    }, []);
+
+        const storedToken = localStorage.getItem('token');
+        const storedUser = localStorage.getItem('user');
+
+        if (storedToken && storedUser) {
+            setIsLoggedIn(true);
+        } else {
+            clearCart();
+            router.push('/login');  // Redirect to login if not logged in
+        }
+    }, [router, clearCart]);
 
     // Toggle selected items for checkout
     const handleSelectItem = (productId: number) => {
@@ -43,81 +40,62 @@ const Cart: React.FC = () => {
     const calculateTotal = () => {
         return cart
             .reduce((total, item) =>
-                selectedItems.includes(item.id) ? total + item.price : total, 
-                0
+                selectedItems.includes(item.id) ? total + item.price * item.quantity : total, 0
             )
             .toFixed(2);
     };
 
-    // Handle checkout action
-    const handleCheckout = () => {
-        const total = calculateTotal();
-        toast.success(`Proceeding to checkout with total: $${total}`);
-    };
-
-    if (!isClient) return null;  // Ensure the component is rendered only on the client
+    if (!isClient) {
+        return null;  // Render nothing on the server
+    }
 
     return (
         <>
-        <div className="fixed inset-0 h-full w-full">
+            <div className="fixed -z-10 top-0 inset-0 h-full w-full">
                 <Background />
-              </div>
-        <Header/>
-        <div className="h-screen w-full bg-darkblue flex justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
-            <ToastContainer />
-            <div className="bg-white z-10 dark:bg-gray-900 p-8 rounded-lg shadow-2xl w-full max-w-3xl">
-                <h1 className="text-3xl text-center font-bold text-purple-500 dark:text-purple-500 mb-6">Your Cart</h1>
+            </div>
+            <Header />
+            <div className="container mx-auto p-6 bg-darkblue mt-40 min-h-screen">
+                <h1 className="text-3xl font-semibold text-center text-white mb-6">Your Cart</h1>
                 {cart.length === 0 ? (
-                    <p className="text-center text-gray-500 dark:text-gray-300">Your cart is empty.</p>
+                    <p className="text-center text-gray-400">Your cart is empty.</p>
                 ) : (
-                    <div className="space-y-6">
-                        <ul className="space-y-4">
-                            {cart.map((item: CartItem) => (
-                                <li
-                                    key={item.id}
-                                    className="flex items-center justify-between p-4 bg-gray-500 dark:bg-gray-800 rounded-lg shadow-md"
-                                >
-                                    <div className="flex items-center">
-                                        <input
-                                            type="checkbox"
-                                            className="mr-4 w-5 h-5 text-purple-600 border-gray-300 rounded focus:ring-purple-300"
-                                            checked={selectedItems.includes(item.id)}
-                                            onChange={() => handleSelectItem(item.id)}
-                                        />
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-purple-500 dark:text-purple">
-                                                {item.name}
-                                            </h3>
-                                            <span className="text-sm text-gray-500 dark:text-gray-400">
-                                                ${item.price.toFixed(2)}
-                                            </span>
-                                        </div>
+                    <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
+                        {cart.map((item) => (
+                            <div key={item.id} className="flex items-center justify-between mb-4 border-b border-gray-700 pb-4">
+                                <div>
+                                    <h2 className="text-lg font-semibold text-purple-400">{item.name}</h2>
+                                    <p className="text-gray-300">Price: ${item.price.toFixed(2)}</p>
+                                    <div className="flex items-center mt-2">
+                                        <button
+                                            onClick={() => removeFromCart(item.id)}
+                                            className="p-2 rounded-md text-purple-400 bg-gray-700 hover:bg-gray-600 transition duration-200"
+                                        >
+                                            -
+                                        </button>
+                                        <span className="mx-2 text-white">{item.quantity}</span>
+                                        <button
+                                            onClick={() => addToCart(item)}
+                                            className="p-2 rounded-md text-purple-400 bg-gray-700 hover:bg-gray-600 transition duration-200"
+                                        >
+                                            +
+                                        </button>
                                     </div>
-                                    <button
-                                        className="text-red-500 hover:text-red-700 transition-colors duration-200"
-                                        onClick={() => removeFromCart(item.id)}
-                                    >
-                                        <FontAwesomeIcon icon="trash-alt" />
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
-                        <div className="border-t border-gray-200 dark:border-gray-600 pt-4">
-                            <div className="flex justify-between text-lg font-medium text-gray-800 dark:text-white">
-                                <span>Total:</span>
-                                <span className="text-green-400">${calculateTotal()}</span>
+                                </div>
+                                <button
+                                    onClick={() => handleSelectItem(item.id)}
+                                    className={`p-2 rounded-md ${selectedItems.includes(item.id) ? 'bg-purple-800' : 'bg-gray-800'} text-white hover:bg-purple-900 transition duration-200`}
+                                >
+                                    {selectedItems.includes(item.id) ? 'Deselect' : 'Select'}
+                                </button>
                             </div>
-                            <button
-                                className="mt-4 w-full py-3 px-6 bg-purple-600 text-white font-semibold rounded-lg shadow-lg hover:bg-purple-700 transition-all duration-300"
-                                onClick={handleCheckout}
-                            >
-                                Proceed to Checkout
-                            </button>
+                        ))}
+                        <div className="text-right text-white mt-6">
+                            <h2 className="text-2xl font-semibold">Total: ${calculateTotal()}</h2>
                         </div>
                     </div>
                 )}
             </div>
-        </div>
         </>
     );
 };

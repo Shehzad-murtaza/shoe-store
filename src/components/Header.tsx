@@ -1,48 +1,77 @@
 'use client';
 
-import React, { useState, useEffect } from "react";
-import { Menu, MenuItem } from "./ui/navbar-menu";
-import { cn } from "@/libs/utils";
-import Link from "next/link";
+import React, { useState, useEffect } from 'react';
+import { Menu, MenuItem } from './ui/navbar-menu';
+import { cn } from '@/libs/utils';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useCart } from '@/app/context/cartContext';
 
-interface HeaderProps {
-  className?: string; // className is optional
-}
+const Header: React.FC<{ className?: string }> = ({ className }) => {
+    const [active, setActive] = useState<string | null>(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const { clearCart } = useCart();
+    const router = useRouter();
 
-const Header: React.FC<HeaderProps> = ({ className }) => {
-  const [active, setActive] = useState<string | null>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+    useEffect(() => {
+        try {
+            const storedToken = localStorage.getItem('token');
+            const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
 
-  // Effect to check if user is logged in based on token in localStorage
-  useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    setIsLoggedIn(!!storedToken); // Update state based on token existence
-  }, []); // Empty dependency array means this effect runs once after initial render
+            if (storedToken && storedUser) {
+                setIsLoggedIn(true);
+                setIsAdmin(storedUser.role === 'admin');
+            } else {
+                setIsLoggedIn(false);
+            }
+        } catch {
+            setIsLoggedIn(false);
+        }
+    }, []);
 
-  return (
-    <div className={cn("fixed top-10 inset-x-0 max-w-2xl mx-auto z-50", className)}>
-      <Menu setActive={setActive}>
-        <Link href={"/"}>
-          <MenuItem setActive={setActive} active={active} item="Home" />
-        </Link>
-        {isLoggedIn ? (
-          <Link href={"/dashboard"}>
-            <MenuItem setActive={setActive} active={active} item="Dashboard" />
-          </Link>
-        ) : (
-          <Link href={"/login"}>
-            <MenuItem setActive={setActive} active={active} item="Login" />
-          </Link>
-        )}
-        <Link href={"/signup"}>
-          <MenuItem setActive={setActive} active={active} item="Signup" />
-        </Link>
-        <Link href={"/cart"}>
-          <MenuItem setActive={setActive} active={active} item="Cart" />
-        </Link>
-      </Menu>
-    </div>
-  );
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        clearCart();
+        setIsLoggedIn(false);
+        router.push('/login');
+    };
+
+    return (
+        <div className={cn("fixed top-10 inset-x-0 max-w-2xl mx-auto z-50", className)}>
+            <Menu setActive={setActive}>
+                <Link href={"/"}>
+                    <MenuItem setActive={setActive} active={active} item="Home" />
+                </Link>
+                {isLoggedIn ? (
+                    <>
+                        {isAdmin ? (
+                            <Link href={"/dashboard"}>
+                                <MenuItem setActive={setActive} active={active} item="Dashboard" />
+                            </Link>
+                        ) : (
+                            <Link href={"/profile"}>
+                                <MenuItem setActive={setActive} active={active} item="Profile" />
+                            </Link>
+                        )}
+                        <Link href={"/cart"}>
+                            <MenuItem setActive={setActive} active={active} item="Cart" />
+                        </Link>
+                    </>
+                ) : (
+                    <>
+                        <Link href={"/login"}>
+                            <MenuItem setActive={setActive} active={active} item="Login" />
+                        </Link>
+                        <Link href={"/signup"}>
+                            <MenuItem setActive={setActive} active={active} item="Signup" />
+                        </Link>
+                    </>
+                )}
+            </Menu>
+        </div>
+    );
 };
 
 export default Header;

@@ -21,86 +21,52 @@ export async function POST(request: Request) {
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
+
+      // Hardcode admin role for a specific email
+      const role = email === 'mr.shehzad457@gmail.com' ? 'admin' : 'user';
+
       const newUser = new User({
         email,
         fullName,
         password: hashedPassword,
+        role,
+        cart: [], // Initialize empty cart
       });
 
-      try {
-        await newUser.save();
-        return NextResponse.json(
-          { message: 'User created successfully' },
-          { status: 201 }
-        );
-      } catch (error: unknown) {
-        return NextResponse.json(
-          { message: 'Error creating user', error: (error as Error).message },
-          { status: 500 }
-        );
-      }
+      await newUser.save();
+
+      const token = jwt.sign({ userId: newUser._id }, jwtSecret, { expiresIn: '1h' });
+
+      return NextResponse.json({ token, user: newUser }, { status: 201 });
     } else if (action === 'login') {
       const user = await User.findOne({ email });
       if (!user) {
         return NextResponse.json(
-          { message: 'User not found' },
-          { status: 404 }
-        );
-      }
-
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) {
-        return NextResponse.json(
-          { message: 'Invalid password' },
-          { status: 401 }
-        );
-      }
-
-      if (!jwtSecret) {
-        console.error('JWT_SECRET is not defined');
-        return NextResponse.json(
-          { message: 'Internal server error' },
-          { status: 500 }
-        );
-      }
-
-      const token = jwt.sign({ id: user._id }, jwtSecret, { expiresIn: '1h' });
-
-      return NextResponse.json(
-        { message: 'Login successful', token, user }, // Send user data along with token
-        { status: 200 }
-      );
-    } else if (action === 'delete') {
-      if (!userId) {
-        return NextResponse.json(
-          { message: 'User ID is required for deletion' },
+          { message: 'User does not exist' },
           { status: 400 }
         );
       }
 
-      const user = await User.findById(userId);
-      if (!user) {
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
         return NextResponse.json(
-          { message: 'User not found' },
-          { status: 404 }
+          { message: 'Incorrect password' },
+          { status: 400 }
         );
       }
 
-      await User.findByIdAndDelete(userId);
+      const token = jwt.sign({ userId: user._id }, jwtSecret, { expiresIn: '1h' });
 
-      return NextResponse.json(
-        { message: 'User deleted successfully' },
-        { status: 200 }
-      );
+      return NextResponse.json({ token, user }, { status: 200 });
     } else {
       return NextResponse.json(
         { message: 'Invalid action' },
         { status: 400 }
       );
     }
-  } catch (error: unknown) {
+  } catch (error) {
     return NextResponse.json(
-      { message: 'Internal server error', error: (error as Error).message },
+      { message: 'Error processing request' },
       { status: 500 }
     );
   }
