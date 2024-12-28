@@ -4,15 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { Menu, MenuItem } from './ui/navbar-menu';
 import { cn } from '@/libs/utils';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useCart } from '@/app/context/cartContext';
 
 const Header: React.FC<{ className?: string }> = ({ className }) => {
     const [active, setActive] = useState<string | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
-    const { clearCart } = useCart();
-    const router = useRouter();
 
     useEffect(() => {
         try {
