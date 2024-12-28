@@ -17,11 +17,11 @@ const Header: React.FC<{ className?: string }> = ({ className }) => {
     useEffect(() => {
         try {
             const storedToken = localStorage.getItem('token');
-            const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-
+            const storedUser = localStorage.getItem('user');
             if (storedToken && storedUser) {
+                const parsedUser = JSON.parse(storedUser);
                 setIsLoggedIn(true);
-                setIsAdmin(storedUser.role === 'admin');
+                setIsAdmin(parsedUser?.role === 'admin');
             } else {
                 setIsLoggedIn(false);
             }
@@ -29,14 +29,6 @@ const Header: React.FC<{ className?: string }> = ({ className }) => {
             setIsLoggedIn(false);
         }
     }, []);
-
-    const handleLogout = () => {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        clearCart();
-        setIsLoggedIn(false);
-        router.push('/login');
-    };
 
     return (
         <div className={cn("fixed top-10 inset-x-0 max-w-2xl mx-auto z-50", className)}>
@@ -58,12 +50,6 @@ const Header: React.FC<{ className?: string }> = ({ className }) => {
                         <Link href={"/cart"}>
                             <MenuItem setActive={setActive} active={active} item="Cart" />
                         </Link>
-                        <button
-                            onClick={handleLogout}
-                            className="text-gray-400 hover:text-purple-400 transition duration-200"
-                        >
-                            Logout
-                        </button>
                     </>
                 ) : (
                     <>
