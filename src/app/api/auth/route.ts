@@ -3,13 +3,14 @@ import User from '@/models/User';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import connectDB from '@/libs/db';
+
 const jwtSecret = "3f3b8c9e1a2d4e5f8b6c7a9e0d1f2a3bchlo";
 
 export async function POST(request: Request) {
   try {
     await connectDB();
 
-    const { action, email, fullName, password, userId } = await request.json();
+    const { action, email, fullName, password } = await request.json(); // Removed unused `userId`
 
     if (action === 'signup') {
       const existingUser = await User.findOne({ email });
@@ -38,7 +39,9 @@ export async function POST(request: Request) {
       const token = jwt.sign({ userId: newUser._id }, jwtSecret, { expiresIn: '1h' });
 
       return NextResponse.json({ token, user: newUser }, { status: 201 });
-    } else if (action === 'login') {
+    } 
+    
+    if (action === 'login') {
       const user = await User.findOne({ email });
       if (!user) {
         return NextResponse.json(
@@ -58,13 +61,16 @@ export async function POST(request: Request) {
       const token = jwt.sign({ userId: user._id }, jwtSecret, { expiresIn: '1h' });
 
       return NextResponse.json({ token, user }, { status: 200 });
-    } else {
-      return NextResponse.json(
-        { message: 'Invalid action' },
-        { status: 400 }
-      );
     }
-  } catch (error) {
+
+    // Handle invalid actions
+    return NextResponse.json(
+      { message: 'Invalid action' },
+      { status: 400 }
+    );
+  } catch (err: unknown) {
+    console.error('Error processing request:', err); // Log the error for debugging
+
     return NextResponse.json(
       { message: 'Error processing request' },
       { status: 500 }

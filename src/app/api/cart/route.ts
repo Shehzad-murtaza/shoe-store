@@ -16,7 +16,8 @@ export async function POST(request: Request) {
         await user.save();
 
         return NextResponse.json({ message: 'Cart saved successfully' }, { status: 200 });
-    } catch (error) {
+    } catch (err: unknown) {
+        console.error('Error saving cart:', err); // Log the error for debugging
         return NextResponse.json({ message: 'Error saving cart' }, { status: 500 });
     }
 }
@@ -33,7 +34,8 @@ export async function GET(request: Request) {
         }
 
         return NextResponse.json({ cart: user.cart || [] }, { status: 200 }); // Ensure cart is always an array
-    } catch (error) {
+    } catch (err: unknown) {
+        console.error('Error fetching cart:', err); // Log the error for debugging
         return NextResponse.json({ message: 'Error fetching cart' }, { status: 500 });
     }
 }

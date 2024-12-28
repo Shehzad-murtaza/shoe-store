@@ -8,22 +8,19 @@ import Header from '@/components/Header';
 
 const Cart: React.FC = () => {
     const { cart, addToCart, removeFromCart, clearCart } = useCart();
-    const [selectedItems, setSelectedItems] = useState<number[]>([]);  // Track selected items
-    const [isClient, setIsClient] = useState(false);  // Ensure this is client-side
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+    const [selectedItems, setSelectedItems] = useState<number[]>([]); // Track selected items
+    const [isClient, setIsClient] = useState(false); // Ensure this is client-side
     const router = useRouter();
 
     useEffect(() => {
-        setIsClient(true);  // Update after the component mounts
+        setIsClient(true); // Update after the component mounts
 
         const storedToken = localStorage.getItem('token');
         const storedUser = localStorage.getItem('user');
 
-        if (storedToken && storedUser) {
-            setIsLoggedIn(true);
-        } else {
+        if (!storedToken || !storedUser) {
             clearCart();
-            router.push('/login');  // Redirect to login if not logged in
+            router.push('/login'); // Redirect to login if not logged in
         }
     }, [router, clearCart]);
 
@@ -46,7 +43,7 @@ const Cart: React.FC = () => {
     };
 
     if (!isClient) {
-        return null;  // Render nothing on the server
+        return null; // Render nothing on the server
     }
 
     return (
@@ -62,7 +59,10 @@ const Cart: React.FC = () => {
                 ) : (
                     <div className="bg-gray-800 p-6 rounded-lg shadow-lg">
                         {cart.map((item) => (
-                            <div key={item.id} className="flex items-center justify-between mb-4 border-b border-gray-700 pb-4">
+                            <div
+                                key={item.id}
+                                className="flex items-center justify-between mb-4 border-b border-gray-700 pb-4"
+                            >
                                 <div>
                                     <h2 className="text-lg font-semibold text-purple-400">{item.name}</h2>
                                     <p className="text-gray-300">Price: ${item.price.toFixed(2)}</p>
@@ -84,7 +84,9 @@ const Cart: React.FC = () => {
                                 </div>
                                 <button
                                     onClick={() => handleSelectItem(item.id)}
-                                    className={`p-2 rounded-md ${selectedItems.includes(item.id) ? 'bg-purple-800' : 'bg-gray-800'} text-white hover:bg-purple-900 transition duration-200`}
+                                    className={`p-2 rounded-md ${
+                                        selectedItems.includes(item.id) ? 'bg-purple-800' : 'bg-gray-800'
+                                    } text-white hover:bg-purple-900 transition duration-200`}
                                 >
                                     {selectedItems.includes(item.id) ? 'Deselect' : 'Select'}
                                 </button>

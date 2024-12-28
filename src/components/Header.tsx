@@ -58,6 +58,12 @@ const Header: React.FC<{ className?: string }> = ({ className }) => {
                         <Link href={"/cart"}>
                             <MenuItem setActive={setActive} active={active} item="Cart" />
                         </Link>
+                        <button
+                            onClick={handleLogout}
+                            className="text-gray-400 hover:text-purple-400 transition duration-200"
+                        >
+                            Logout
+                        </button>
                     </>
                 ) : (
                     <>
