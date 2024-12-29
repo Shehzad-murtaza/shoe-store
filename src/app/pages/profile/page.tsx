@@ -22,13 +22,13 @@ const Profile = () => {
     const storedUser = localStorage.getItem('user');
 
     if (!storedToken || !storedUser) {
-      router.push('/login'); // Redirect to login if no token or user data found
+      router.push('/pages/login'); // Redirect to login if no token or user data found
     } else {
       const parsedUser = JSON.parse(storedUser);
       if (parsedUser) {
         setUser(parsedUser);
       } else {
-        router.push('/login'); // Redirect if user data is invalid
+        router.push('/pages/login'); // Redirect if user data is invalid
       }
     }
     setLoading(false);
@@ -37,7 +37,7 @@ const Profile = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    router.push('/login'); // Redirect to login after logout
+    router.push('/pages/login'); // Redirect to login after logout
   };
 
   if (loading) {

@@ -72,7 +72,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         const storedUser = localStorage.getItem('user');
         if (!storedUser) {
             toast.error('Please login or signup to add items to the cart');
-            router.push('/signup');
+            router.push('/pages/signup');
             return;
         }
 

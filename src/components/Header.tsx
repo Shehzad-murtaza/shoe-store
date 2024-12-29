@@ -35,24 +35,24 @@ const Header: React.FC<{ className?: string }> = ({ className }) => {
                 {isLoggedIn ? (
                     <>
                         {isAdmin ? (
-                            <Link href={"/dashboard"}>
+                            <Link href={"/pages/dashboard"}>
                                 <MenuItem setActive={setActive} active={active} item="Dashboard" />
                             </Link>
                         ) : (
-                            <Link href={"/profile"}>
+                            <Link href={"/pages/profile"}>
                                 <MenuItem setActive={setActive} active={active} item="Profile" />
                             </Link>
                         )}
-                        <Link href={"/cart"}>
+                        <Link href={"/pages/cart"}>
                             <MenuItem setActive={setActive} active={active} item="Cart" />
                         </Link>
                     </>
                 ) : (
                     <>
-                        <Link href={"/login"}>
+                        <Link href={"/pages/login"}>
                             <MenuItem setActive={setActive} active={active} item="Login" />
                         </Link>
-                        <Link href={"/signup"}>
+                        <Link href={"/pages/signup"}>
                             <MenuItem setActive={setActive} active={active} item="Signup" />
                         </Link>
                     </>

@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import './globals.css';
 import { useState, ReactElement } from 'react';
 import React from 'react';
-import { CartProvider } from './context/cartContext';
+import { CartProvider } from './pages/context/cartContext';
 
 interface User {
   id: string;

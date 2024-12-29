@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-cards";
-import { useCart } from '@/app/context/cartContext';
+import { useCart } from '@/app/pages/context/cartContext';
 import Link from 'next/link';
 import Header from '@/components/Header';
 
@@ -60,7 +60,7 @@ const ProductList: React.FC = () => {
                                     <p className="text-neutral-400 text-sm">{product.description}</p>
                                 </div>
                                 <div className="flex justify-between items-center mt-4">
-                                    <Link href={`/productDetails/${product.id}`}>
+                                    <Link href={`/pages/productDetails/${product.id}`}>
                                         <CardItem
                                             translateZ={20}
                                             as="button"

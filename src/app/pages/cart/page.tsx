@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useCart } from '@/app/context/cartContext';
+import { useCart } from '@/app/pages/context/cartContext';
 import { Background } from '@/components/background';
 import Header from '@/components/Header';
 
@@ -20,7 +20,7 @@ const Cart: React.FC = () => {
 
         if (!storedToken || !storedUser) {
             clearCart();
-            router.push('/login'); // Redirect to login if not logged in
+            router.push('/pages/login'); // Redirect to login if not logged in
         }
     }, [router, clearCart]);
 

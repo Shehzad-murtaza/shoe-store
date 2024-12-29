@@ -13,13 +13,15 @@ export default function HeroSection() {
 
       {/* Call to Action Buttons */}
       <div className="flex justify-center space-x-8 mt-6">
-        <a href="/products">
+        <a href="/pages/products">
           <button className="px-10 py-4 bg-purple-600 text-white rounded-lg font-semibold shadow-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-400 transition-all duration-300 transform hover:scale-105">
             Explore Products
           </button>
         </a>
         <button className="px-10 py-4 bg-gray-700 text-white rounded-lg font-semibold shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all duration-300 transform hover:scale-105">
+          <a href="/pages/contact">
           Contact Us
+          </a>
         </button>
       </div>
     </BackgroundLines>

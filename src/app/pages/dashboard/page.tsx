@@ -25,7 +25,7 @@ const Dashboard = () => {
     const storedUser = localStorage.getItem('user');
 
     if (!storedToken || !storedUser) {
-      router.push('/login'); // Redirect to login if no token or user data found
+      router.push('/pages/login'); // Redirect to login if no token or user data found
     } else {
       const parsedUser = JSON.parse(storedUser);
       if (parsedUser) {
@@ -33,10 +33,10 @@ const Dashboard = () => {
         if (parsedUser.role === 'admin') {
           fetchUsers(); // Fetch users only if authenticated and admin
         } else {
-          router.push('/profile'); // Redirect to profile if not admin
+          router.push('/pages/profile'); // Redirect to profile if not admin
         }
       } else {
-        router.push('/login'); // Redirect if user data is invalid
+        router.push('/pages/login'); // Redirect if user data is invalid
       }
     }
   }, [router]);
@@ -56,7 +56,7 @@ const Dashboard = () => {
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    router.push('/login'); // Redirect to login after logout
+    router.push('/pages/login'); // Redirect to login after logout
   };
 
   const handleDeleteUser = async (userId: string) => {

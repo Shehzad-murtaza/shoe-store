@@ -34,7 +34,7 @@ const Signup = () => {
       });
 
       toast.success(response.data.message); // Show success toast
-      router.push('/login'); // Redirect to login page after signup
+      router.push('/pages/login'); // Redirect to login page after signup
     } catch (error: unknown) {
       // Check if the error is an AxiosError
       if (axios.isAxiosError(error)) {

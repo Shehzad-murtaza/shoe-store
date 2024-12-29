@@ -1,5 +1,5 @@
 'use client';
-import ProductList from './products/page';
+import ProductList from './pages/products/page';
 import './globals.css';
 import HeroSection from '@/components/HeroSection'; // Import HeroSection component
 import Footer from '@/components/Footer';

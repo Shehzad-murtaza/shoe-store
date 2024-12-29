@@ -34,7 +34,7 @@ const Login = () => {
 
       // Delay router.push to ensure localStorage has been updated
       setTimeout(() => {
-        router.push('/dashboard'); // Redirect to dashboard after login
+        router.push('/pages/dashboard'); // Redirect to dashboard after login
       }, 100); // Short delay to allow state update
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
