@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-const MONGODB_URI = "mongodb+srv://mrshehzad457:shehzad@cluster0.agiup.mongodb.net/shoe-store";
+const DB = process.env.MONGO_URI;
 
 const connectDB = async (): Promise<void> => {
-  if (!MONGODB_URI) {
+  if (!DB) {
     console.error('MongoDB URI is not defined');
     process.exit(1);
   }
@@ -13,7 +13,7 @@ const connectDB = async (): Promise<void> => {
   }
 
   try {
-    await mongoose.connect(MONGODB_URI);
+    await mongoose.connect(DB);
     console.log('DB connect hogai');
   } catch (error) {
     console.error('Database connection error: ', error);
