@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import connectDB from '@/libs/db';
 
-const jwtSecret = "process.env.JWT_SECRET";
+const jwtSecret = "3f3b8c9e1a2d4e5f8b6c7a9e0d1f2a3bchlo";
 
 export async function POST(request: Request) {
   try {
