@@ -3,7 +3,6 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 
-// Type definitions
 interface Product {
     id: number;
     name: string;
@@ -21,7 +20,6 @@ interface CartContextType {
     cartNotify: number;
 }
 
-// Context initialization
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 interface CartProviderProps {
@@ -40,7 +38,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
                 const parsedUser = JSON.parse(storedUser);
                 try {
                     const response = await axios.get(`/api/cart?userId=${parsedUser._id}`);
-                    setCart(response.data.cart || []); // Ensure cart is always an array
+                    setCart(response.data.cart || []);
                 } catch (error) {
                     console.error('Error fetching cart:', error);
                 }
@@ -50,29 +48,14 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     }, []);
 
     useEffect(() => {
-        sessionStorage.setItem('cart', JSON.stringify(cart));
         setCartNotify(cart.reduce((acc, product) => acc + product.quantity, 0));
     }, [cart]);
-
-    const saveCartToUser = async (updatedCart: Product[]) => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            const parsedUser = JSON.parse(storedUser);
-            try {
-                await axios.post('/api/cart', { userId: parsedUser._id, cart: updatedCart });
-                parsedUser.cart = updatedCart;
-                localStorage.setItem('user', JSON.stringify(parsedUser));
-            } catch (error) {
-                console.error('Error saving cart:', error);
-            }
-        }
-    };
 
     const addToCart = (product: Product) => {
         const storedUser = localStorage.getItem('user');
         if (!storedUser) {
             toast.error('Please login or signup to add items to the cart');
-            router.push('/pages/signup');
+            router.push('/pages/login');
             return;
         }
 
@@ -83,7 +66,12 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
                     item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
                 )
                 : [...prevCart, { ...product, quantity: 1 }];
-            saveCartToUser(updatedCart);
+
+            const parsedUser = JSON.parse(storedUser);
+            axios.post('/api/cart', { userId: parsedUser._id, cart: updatedCart }).catch((error) => {
+                console.error('Error saving cart:', error);
+            });
+
             return updatedCart;
         });
         toast.success(`${product.name} added to cart`);
@@ -91,32 +79,20 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
     const removeFromCart = (productId: number) => {
         setCart((prevCart) => {
-            const existingProduct = prevCart.find((item) => item.id === productId);
-            const updatedCart = existingProduct && existingProduct.quantity > 1
-                ? prevCart.map((item) =>
-                    item.id === productId ? { ...item, quantity: item.quantity - 1 } : item
-                )
-                : prevCart.filter((item) => item.id !== productId);
-            saveCartToUser(updatedCart);
+            const updatedCart = prevCart.filter((item) => item.id !== productId);
+            const storedUser = localStorage.getItem('user');
+            if (storedUser) {
+                const parsedUser = JSON.parse(storedUser);
+                axios.post('/api/cart', { userId: parsedUser._id, cart: updatedCart });
+            }
             return updatedCart;
         });
-        toast.info(`Product removed from cart`);
+        toast.info('Product removed from cart');
     };
 
-    const clearCart = async () => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            const parsedUser = JSON.parse(storedUser);
-            try {
-                await axios.post('/api/cart', { userId: parsedUser._id, cart: [] });
-                parsedUser.cart = [];
-                localStorage.setItem('user', JSON.stringify(parsedUser));
-            } catch (error) {
-                console.error('Error clearing cart:', error);
-            }
-        }
+    const clearCart = () => {
         setCart([]);
-        sessionStorage.removeItem('cart');
+        toast.info('Cart cleared');
     };
 
     return (
