@@ -1,8 +1,8 @@
-'use client';
+'use client'; // <-- Ensure this is the very first line
 
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation'; // <-- This should work after 'use client'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Header from '@/components/Header';
@@ -11,7 +11,7 @@ import { Background } from '@/components/background';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // Toggle for password visibility
+  const [showPassword, setShowPassword] = useState(false); 
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -28,14 +28,13 @@ const Login = () => {
 
       toast.success(response.data.message);
 
-      // Store token and user data in localStorage
       localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user)); // Assuming user data is returned
+      localStorage.setItem('user', JSON.stringify(response.data.user)); 
 
-      // Delay router.push to ensure localStorage has been updated
       setTimeout(() => {
-        router.push('/pages/dashboard'); // Redirect to dashboard after login
-      }, 100); // Short delay to allow state update
+        router.push('/pages/dashboard');
+      }, 100); // Redirect to dashboard after login
+
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         toast.error(error.response?.data?.message || 'An error occurred');
@@ -92,14 +91,9 @@ const Login = () => {
               {loading ? 'Logging in...' : 'Login'}
             </button>
           </form>
-          <p className="text-center text-gray-600">
-            Don&apos;t have an account?{' '}
-            <a href="/pages/signup" className="text-purple-600 hover:underline">Signup</a>
-          </p>
         </div>
-
-        <ToastContainer />
       </div>
+      <ToastContainer />
     </>
   );
 };

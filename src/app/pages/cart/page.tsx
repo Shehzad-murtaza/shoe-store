@@ -1,50 +1,23 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
 import { useCart } from '@/app/pages/context/cartContext';
 import { Background } from '@/components/background';
 import Header from '@/components/Header';
 
 const Cart: React.FC = () => {
-    const { cart, addToCart, removeFromCart, clearCart } = useCart();
-    const [selectedItems, setSelectedItems] = useState<number[]>([]); // Track selected items
-    const [isClient, setIsClient] = useState(false); // Ensure this is client-side
-    const router = useRouter();
+    const { cart, addToCart, removeFromCart, clearCart, fetchCart, cartNotify } = useCart();
 
+    // Initialize cart only when it's empty
     useEffect(() => {
-        setIsClient(true); // Update after the component mounts
-
-        const storedToken = localStorage.getItem('token');
         const storedUser = localStorage.getItem('user');
-
-        if (!storedToken || !storedUser) {
-            clearCart();
-            router.push('/pages/login'); // Redirect to login if not logged in
+        // Fetch cart data only if it's not already loaded and user is logged in
+        if (storedUser && cart.length === 0) { // Only fetch if cart is empty
+            const { _id } = JSON.parse(storedUser);
+            fetchCart(_id); // Fetch cart after login
         }
-    }, [router, clearCart]);
-
-    // Toggle selected items for checkout
-    const handleSelectItem = (productId: number) => {
-        setSelectedItems((prevSelected) =>
-            prevSelected.includes(productId)
-                ? prevSelected.filter((id) => id !== productId)
-                : [...prevSelected, productId]
-        );
-    };
-
-    // Calculate total price for selected items
-    const calculateTotal = () => {
-        return cart
-            .reduce((total, item) =>
-                selectedItems.includes(item.id) ? total + item.price * item.quantity : total, 0
-            )
-            .toFixed(2);
-    };
-
-    if (!isClient) {
-        return null; // Render nothing on the server
-    }
+    }, [cart.length]);  // Dependency array only depends on cart.length
+     // Added fetchCart to dependency array
 
     return (
         <>
@@ -82,18 +55,16 @@ const Cart: React.FC = () => {
                                         </button>
                                     </div>
                                 </div>
-                                <button
-                                    onClick={() => handleSelectItem(item.id)}
-                                    className={`p-2 rounded-md ${
-                                        selectedItems.includes(item.id) ? 'bg-purple-800' : 'bg-gray-800'
-                                    } text-white hover:bg-purple-900 transition duration-200`}
-                                >
-                                    {selectedItems.includes(item.id) ? 'Deselect' : 'Select'}
-                                </button>
                             </div>
                         ))}
-                        <div className="text-right text-white mt-6">
-                            <h2 className="text-2xl font-semibold">Total: ${calculateTotal()}</h2>
+                        <div className="flex justify-between items-center mt-4">
+                            <button
+                                onClick={clearCart}
+                                className="bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition"
+                            >
+                                Clear Cart
+                            </button>
+                            <div className="text-white">Items: {cartNotify}</div>
                         </div>
                     </div>
                 )}
