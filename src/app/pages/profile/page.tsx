@@ -5,6 +5,15 @@ import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import { Background } from '@/components/background';
 
+interface Product {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+  quantity: number;
+}
+
 interface User {
   _id: string;
   email: string;
@@ -14,38 +23,58 @@ interface User {
 
 const Profile = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [cart, setCart] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
+    const fetchUserData = async () => {
+      try {
+        const storedToken = localStorage.getItem('token');
+        const storedUser = localStorage.getItem('user');
 
-    if (!storedToken || !storedUser) {
-      router.push('/pages/login'); // Redirect to login if no token or user data found
-    } else {
-      const parsedUser = JSON.parse(storedUser);
-      if (parsedUser) {
+        if (!storedToken || !storedUser) {
+          router.push('/pages/login');
+          return;
+        }
+
+        const parsedUser = JSON.parse(storedUser);
         setUser(parsedUser);
-      } else {
-        router.push('/pages/login'); // Redirect if user data is invalid
+
+        // Fetch user's cart data from the API
+        const response = await fetch(`/api/cart?userId=${parsedUser._id}`, {
+          headers: {
+            Authorization: `Bearer ${storedToken}`, // If token is needed
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch cart data');
+        }
+
+        const data = await response.json();
+        setCart(data.cart || []); // Set fetched cart data
+      } catch (error) {
+        console.error('Error fetching user or cart data:', error);
+        router.push('/pages/login'); // Redirect if error occurs
+      } finally {
+        setLoading(false);
       }
-    }
-    setLoading(false);
+    };
+
+    fetchUserData();
   }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    router.push('/pages/login'); // Redirect to login after logout
+    router.push('/pages/login');
   };
 
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-darkblue">
-        <div className="relative w-full max-w-md px-4">
-          <div className="text-white font-medium text-lg text-center">Loading...</div>
-        </div>
+        <div className="text-white font-medium text-lg text-center">Loading...</div>
       </div>
     );
   }
@@ -53,8 +82,8 @@ const Profile = () => {
   if (!user) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-darkblue">
-        <div className="relative w-full max-w-md px-4">
-          <div className="text-white font-medium text-lg text-center">User not found. Please check the URL.</div>
+        <div className="text-white font-medium text-lg text-center">
+          User not found. Please check the URL.
         </div>
       </div>
     );
@@ -78,11 +107,29 @@ const Profile = () => {
             Logout
           </button>
         </div>
-        <div className="bg-gray-700 rounded-lg shadow-md p-4">
-          <h2 className="text-xl font-semibold text-purple-600">Profile Information</h2>
+        <div className="bg-gray-700 rounded-lg shadow-md p-4 mb-6">
+          <h2 className="text-xl font-semibold text-purple-600 mb-2">Profile Information</h2>
           <p className="text-gray-300">Email: {user.email}</p>
           <p className="text-gray-300">Full Name: {user.fullName}</p>
           <p className="text-gray-300">Role: {user.role}</p>
+        </div>
+        <div className="bg-gray-700 rounded-lg shadow-md p-4">
+          <h2 className="text-xl font-semibold text-purple-600 mb-4">Your Cart</h2>
+          {cart.length > 0 ? (
+            <ul className="space-y-2">
+              {cart.map((product) => (
+                <li
+                  key={product.id}
+                  className="flex justify-between items-center bg-gray-800 rounded-md p-3 hover:bg-gray-900 transition"
+                >
+                  <span className="text-white font-medium">{product.name}</span>
+                  <span className="text-gray-300">Quantity: {product.quantity}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-400 text-center">Your cart is empty.</p>
+          )}
         </div>
       </div>
     </>
